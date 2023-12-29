@@ -18,6 +18,9 @@ function formatTitle(title) {
 async function getBooks() {
   const config = getConfig("/booklet_api/v1/booklet/bookletshelflist");
   const { data } = await axios.request(config);
+  if (!data.data) {
+    throw "User information error"
+  }
   const books = [];
   data.data.forEach((book) => {
     books.push(book.booklet_id);
@@ -39,7 +42,7 @@ async function getbookletshelf(booklet_id) {
   if (!book) return;
   const bookName = formatTitle(book.booklet.base_info.title);
   const path = `./books/${bookName}`;
-  fs.mkdir(path, () => {});
+  fs.mkdir(path, () => { });
   fs.writeFile(`${path}/0.小册介绍.md`, book.introduction.content, (err) => {
     if (err) throw err;
     console.log(`${bookName}-0.小册介绍  写入成功`);
@@ -67,7 +70,7 @@ async function getbookletSection(path, bookName, index, section_id) {
 }
 
 async function main() {
-  fs.mkdir("books", () => {});
+  fs.mkdir("books", () => { });
   await getBooks();
 }
 main();
